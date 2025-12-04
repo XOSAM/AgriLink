@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .data-card {
+        background: var(--card-bg);
+        color: var(--text-color);
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 20px;
+        padding: 20px;
+        border-left: 5px solid var(--primary-green);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .data-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+    .data-header {
+        color: var(--primary-green);
+        font-weight: 700;
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--border-color);
+    }
+    .profile-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--primary-green);
+        margin-right: 10px;
+    }
+    .badge-success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .badge-info {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+    .crop-image {
+        max-width: 100%;
+        height: auto;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-top: 15px;
+        transition: transform 0.3s;
+    }
+    .crop-image:hover {
+        transform: scale(1.02);
+    }
+</style>
+
+<div class="container py-4">
+
+    <!-- Buyer View: Display Crops -->
+    {% if crops %}
+        <h2 class="data-header">
+            {% if is_owner_view %}My Crop Listings (Manage) 📝{% else %}Available Crop Listings (For Buyers){% endif %}
+        </h2>
+        
+        <div class="row">
+            {% for crop in crops %}
+            <div class="col-lg-6">
+                <div class="data-card d-flex flex-column h-100">
+                    <div>
+                        <h4 class="mb-2 text-success">{{ crop['crop_name'] }}</h4>
+                        <p class="text-muted small mb-3">
+                            <img src="{{ url_for('static', filename='uploads/' + (crop['profile_pic'] if crop['profile_pic'] and crop['profile_pic'] != 'default.jpg' else 'default.jpg')) }}" 
+                                 class="profile-img" alt="Farmer Profile">
+                            Listed by: <strong>{{ crop['farmer_name'] }}</strong>
+                        </p>
+                        
+                        <div class="row g-2 mb-3">
+                            <div class="col-sm-6"><span class="badge badge-success p-2 w-100">Qty: {{ crop['quantity'] }}</span></div>
+                            <div class="col-sm-6"><span class="badge badge-info p-2 w-100">Price: MWK {{ "{:,.0f}".format(crop['price'] | float) }} / Unit</span></div>
+                            <div class="col-sm-12"><span class="badge bg-secondary text-white p-2 w-100">Quality: {{ crop['quality'] }}</span></div>
+                        </div>
+
+                        <p class="small text-end fst-italic">Expected Harvest: {{ crop['harvest_date'] }}</p>
+
+                        {% if crop['image'] %}
+                            <img src="{{ url_for('static', filename='uploads/' + crop['image']) }}" 
+                                 class="crop-image" alt="{{ crop['crop_name'] }} Image"
+                                 onerror="this.onerror=null;this.src='https://placehold.co/400x200/cccccc/333333?text=Image+Unavailable';" >
+                        {% else %}
+                            <p class="text-center text-secondary mt-3">No image available for this listing.</p>
+                        {% endif %}
+                    </div>
+                    
+                    {% if is_owner_view %}
+                        <!-- Owner View: Edit and Delete Buttons -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{{ url_for('edit_crop', crop_id=crop['id']) }}" class="btn btn-warning w-50 me-2">Edit Listing</a>
+                            <form method="POST" action="{{ url_for('delete_crop', crop_id=crop['id']) }}" class="w-50" onsubmit="return confirm('Are you sure you want to delete this crop listing? This action cannot be undone.');">
+                                <button type="submit" class="btn btn-danger w-100">Delete</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <button class="btn btn-success mt-3 w-100" disabled>Contact Farmer (Placeholder)</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    <!-- Farmer View: Display Demands -->
+    {% elif demands %}
+        <h2 class="data-header">
+            {% if is_owner_view %}My Buyer Demands (Manage) 🛒{% else %}Active Buyer Demands (For Farmers) 🛒{% endif %}
+        </h2>
+
+        <div class="row">
+            {% for demand in demands %}
+            <div class="col-lg-6">
+                <div class="data-card d-flex flex-column h-100">
+                    <div>
+                        <h4 class="mb-2 text-primary">{{ demand['crop_name'] }}</h4>
+                        <p class="text-muted small mb-3">
+                            <img src="{{ url_for('static', filename='uploads/' + (demand['profile_pic'] if demand['profile_pic'] and demand['profile_pic'] != 'default.jpg' else 'default.jpg')) }}" 
+                                 class="profile-img" alt="Buyer Profile">
+                            Posted by: <strong>{{ demand['buyer_name'] }}</strong>
+                        </p>
+                        
+                        <div class="row g-2 mb-3">
+                            <div class="col-sm-6"><span class="badge bg-primary text-white p-2 w-100">Quantity Needed: {{ demand['quantity'] }}</span></div>
+                            <div class="col-sm-6"><span class="badge bg-secondary text-white p-2 w-100">Target Location: {{ demand['location'] }}</span></div>
+                        </div>
+
+                        {% if demand['quality'] %}
+                            <p class="mb-1"><strong>Required Quality:</strong> {{ demand['quality'] }}</p>
+                        {% endif %}
+                        
+                        <p class="mt-2"><strong>Message from Buyer:</strong></p>
+                        <blockquote class="blockquote small border-start border-3 ps-3">
+                            {{ demand['message'] or 'No specific message provided.' }}
+                        </blockquote>
+                    </div>
+                    
+                    {% if is_owner_view %}
+                        <!-- Owner View: Edit and Delete Buttons -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{{ url_for('edit_demand', demand_id=demand['id']) }}" class="btn btn-warning w-50 me-2">Edit Demand</a>
+                            <form method="POST" action="{{ url_for('delete_demand', demand_id=demand['id']) }}" class="w-50" onsubmit="return confirm('Are you sure you want to delete this demand? This action cannot be undone.');">
+                                <button type="submit" class="btn btn-danger w-100">Delete</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <button class="btn btn-success mt-3 w-100" disabled>Respond to Demand (Placeholder)</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <!-- Default case if no data is passed or user role is not supported -->
+        <div class="alert alert-info text-center mt-5">
+            <h4 class="alert-heading">No Listings Found</h4>
+            <p>There are currently no active listings or demands to display based on your role.</p>
+            {% if session.role == 'farmer' %}
+                <a href="{{ url_for('add_crop') }}" class="btn btn-success mt-3">Add Your First Crop Listing</a>
+            {% elif session.role == 'buyer' %}
+                <a href="{{ url_for('add_demand') }}" class="btn btn-success mt-3">Post a Demand</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

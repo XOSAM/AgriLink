@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="order-history-container">
+    <h2>🛍️ My Order History</h2>
+
+    {% if orders %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Crop</th>
+                    <th>Farmer</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.order_date.split(' ')[0] }}</td>
+                    <td>{{ order.crop_name }}</td>
+                    <td>{{ order.farmer_name }}</td>
+                    <td>{{ order.quantity }} kg</td>
+                    <td>MWK {{ "{:,.2f}".format(order.total_price) }}</td>
+                    <td><span class="badge status-{{ order.order_status | lower }}">{{ order.order_status }}</span></td>
+                    <td>
+                        {% if order.order_status == 'Delivered' %}
+                            {% if order.review_id %}
+                                <span class="text-muted small">Reviewed</span>
+                            {% else %}
+                                <a href="{{ url_for('buyer.leave_review', order_id=order.id) }}" class="btn btn-sm btn-warning">Leave Review</a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <p class="lead mb-0">You have not placed any orders yet.</p>
+    </div>
+    {% endif %}
+    <div class="text-center mt-4">
+        <a href="{{ url_for('buyer.dashboard') }}" class="btn btn-secondary">&larr; Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

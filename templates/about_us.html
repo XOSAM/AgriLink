@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}About AgriLink Malawi{% endblock %}
+
+{% block content %}
+<style>
+    .info-section {
+        padding: 60px 0;
+    }
+    .info-section h2 {
+        text-align: center;
+        color: #046307;
+        font-weight: 700;
+        margin-bottom: 40px;
+    }
+    .feature-card, .faq-item {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        border-left: 5px solid #046307;
+    }
+    .feature-card h5, .faq-item h5 {
+        color: #046307;
+        font-weight: 600;
+    }
+    .contact-form-section {
+        background-color: #f8f9fa;
+        padding: 60px;
+        border-radius: 12px;
+    }
+</style>
+
+<!-- Features Section -->
+<section class="info-section" id="features">
+  <div class="container">
+    <h2>Our Platform Features</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5>Farmer Listings</h5>
+          <p>Farmers can easily list their crops with details like quantity, price, and location to reach a wide network of reliable buyers directly.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5>Buyer Marketplace</h5>
+          <p>Buyers can browse a diverse marketplace of available produce, connect with farmers, and place orders seamlessly and securely.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5>Direct Messaging</h5>
+          <p>Our integrated messaging system allows buyers and farmers to communicate directly to negotiate details and build trust.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5>Secure Payments</h5>
+          <p>We facilitate secure online payments through trusted local gateways, ensuring peace of mind for every transaction.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5>Admin Oversight</h5>
+          <p>A comprehensive admin dashboard allows for management of users, transactions, and communications to ensure platform integrity.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5>Demand Posting</h5>
+          <p>Buyers can post specific demands for crops they need, allowing farmers to proactively respond to market needs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Us Section -->
+<section class="info-section bg-light" id="about">
+  <div class="container">
+    <h2>About AgriLink Malawi</h2>
+    <p class="lead text-center mx-auto" style="max-width: 800px;">AgriLink Malawi is a digital platform connecting farmers directly with buyers across Malawi. Our goal is to eliminate middlemen, ensure fair pricing, and promote sustainable agriculture through technology. We believe in empowering local farmers by giving them the tools to access a broader market, and providing buyers with a reliable source of quality, traceable produce.</p>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="info-section" id="faq">
+    <div class="container">
+        <h2>Frequently Asked Questions (FAQ)</h2>
+        <div class="faq-item">
+            <h5>How do I register as a farmer or buyer?</h5>
+            <p>Click the "Login" button on the homepage, then select "Don't have an account? Register". You can choose your role during the simple registration process.</p>
+        </div>
+        <div class="faq-item">
+            <h5>Is there a fee to use AgriLink?</h5>
+            <p>Basic registration and listing are free. We may take a small commission on completed transactions to maintain and improve the platform.</p>
+        </div>
+        <div class="faq-item">
+            <h5>How are payments handled?</h5>
+            <p>Payments are processed securely through our integrated payment gateway partner, PayChangu, which supports local mobile money services like Airtel Money and TNM Mpamba.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="info-section bg-light" id="contact">
+    <div class="container">
+        <h2>Contact Us</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="contact-form-section" id="contact-form">
+                    <h4 class="text-center mb-4">Send us a Message</h4>
+                    <p class="text-center text-muted mb-4">Have questions or need support? Fill out the form below.</p>
+                    <form method="POST" action="{{ url_for('about_us') }}">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact" class="form-label">Your Email or Phone Number</label>
+                            <input type="text" class="form-control" id="contact" name="contact" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success btn-lg">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+```
+
+With these changes, you now have a professional, multi-section information page that not only informs your users but also provides a direct line of communication to your support team through the admin dashboard.
+
+<!--
+[PROMPT_SUGGESTION]How can I add a link to this new "About Us" page in the website's footer?[/PROMPT_SUGGESTION]
+[PROMPT_SUGGESTION]Can you help me implement a "soft delete" for users instead of a permanent one?[/PROMPT_SUGGESTION]
+-->

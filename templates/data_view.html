@@ -1,0 +1,116 @@
+<div class="data-container">
+<h3 class="text-center mb-4 item-title">{{ title }}</h3>
+<div class="row g-4">
+
+    {% if items %}
+        {% for item in items %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="data-card">
+                    
+                    <!-- 1. Image and Title -->
+                    {% if list_type == 'crops' %}
+                        {% set crop_image_name = item.crop_name | lower | replace(' ', '_') | replace('(', '') | replace(')', '') + '.jpg' %}
+                        {% if item.image %}
+                            <img src="{{ url_for('static', filename='uploads/' + item.image) }}" 
+                                 class="card-img-top" alt="{{ item.crop_name }}">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='crop_images/' + crop_image_name) }}" 
+                                 class="card-img-top" alt="{{ item.crop_name }}"
+                                 onerror="this.onerror=null;this.src='{{ url_for('static', filename='crop.jpg') }}';">
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="item-title">{{ item.crop_name }}</h5>
+                            
+                            <!-- 2. Details for Crops -->
+                            <p class="card-text">
+                                <strong>Quantity:</strong> {{ item.quantity }}<br>
+                                <strong>Price:</strong> MWK {{ "{:,.2f}".format(item.price) }} / kg<br>
+                                <strong>Quality:</strong> {{ item.quality }}<br>
+                                <strong>Harvest:</strong> {{ item.harvest_date }}
+                            </p>
+                            
+                            <!-- 3. Farmer Info -->
+                            <div class="d-flex align-items-center mb-3">
+                                <a href="{{ url_for('main.view_user_profile', user_id=item.farmer_id) }}" class="profile-link d-flex align-items-center">
+                                    <img src="{{ url_for('static', filename=(item.profile_pic if item.profile_pic else 'dp.png')) }}" alt="Farmer Profile">
+                                    <small class="text-muted">Farmer: {{ item.farmer_name }}</small>
+                                </a>
+                            </div>
+                            
+                            <!-- 4. Action Buttons -->
+                            {% if is_owner_view %}
+                                <div class="d-flex gap-2 mt-2">
+                                    <a href="{{ url_for('farmer.edit_crop', crop_id=item.id) }}" class="btn btn-warning flex-fill">Edit</a>
+                                    <form method="POST" action="{{ url_for('farmer.delete_crop', crop_id=item.id) }}" class="flex-fill" onsubmit="return confirm('Are you sure you want to permanently delete this listing?');">
+                                        <button type="submit" class="btn btn-danger w-100">Delete</button>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <a href="{{ url_for('messaging.send_message', receiver_id=item.farmer_id, crop_id=item.id) }}" class="btn btn-success w-100 mt-2">Contact Farmer</a>
+                            {% endif %}
+                        </div>
+
+                    {% elif list_type == 'demands' %}
+                        {% if item.image %}
+                            <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img-top" alt="{{ item.crop_name }}">
+                        {% else %}
+                            {% set crop_image_name = item.crop_name | lower | replace(' ', '_') | replace('(', '') | replace(')', '') + '.jpg' %}
+                            <img src="{{ url_for('static', filename='crop_images/' + crop_image_name) }}" 
+                                 class="card-img-top" alt="{{ item.crop_name }}"
+                                 onerror="this.onerror=null;this.src='{{ url_for('static', filename='crop.jpg') }}';">
+                        {% endif %}
+
+
+                        <div class="card-body">
+                            <h5 class="item-title">Demand: {{ item.crop_name }}</h5>
+
+                            <!-- 2. Details for Demands -->
+                            <p class="card-text">
+                                <strong>Quantity:</strong> {{ item.quantity }}<br>
+                                <strong>Location:</strong> {{ item.location }}<br>
+                                <strong>Quality Needed:</strong> {{ item.quality if item.quality else 'Any' }}<br>
+                                <strong>Notes:</strong> {{ item.message if item.message else 'N/A' }}
+                            </p>
+
+                            <!-- 3. Buyer Info -->
+                            <div class="d-flex align-items-center mb-3">
+                                <a href="{{ url_for('main.view_user_profile', user_id=item.buyer_id) }}" class="profile-link d-flex align-items-center">
+                                    <img src="{{ url_for('static', filename=(item.profile_pic if item.profile_pic else 'dp.png')) }}" alt="Buyer Profile">
+                                    <small class="text-muted">Buyer: {{ item.buyer_name }}</small>
+                                </a>
+                            </div>
+
+                            <!-- 4. Action Buttons -->
+                            {% if is_owner_view %}
+                                <div class="d-flex gap-2 mt-2">
+                                    <a href="{{ url_for('buyer.edit_demand', demand_id=item.id) }}" class="btn btn-warning flex-fill">Edit</a>
+                                    <form method="POST" action="{{ url_for('buyer.delete_demand', demand_id=item.id) }}" class="flex-fill" onsubmit="return confirm('Are you sure you want to permanently delete this demand?');">
+                                        <button type="submit" class="btn btn-danger w-100">Delete</button>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <a href="{{ url_for('messaging.send_message', receiver_id=item.buyer_id, demand_id=item.id) }}" class="btn btn-warning w-100 mt-2">Respond to Demand</a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <!-- No Listings/Demands Found -->
+        <div class="col-12 text-center py-5">
+            <p class="lead text-muted">No {{ list_type.replace('s', ' listings') }} found at this time.</p>
+            {% if list_type == 'crops' %}
+                <p>Check back later or <a href="{{ url_for('buyer.add_demand') }}" class="text-success">Post your own Demand</a>.</p>
+            {% elif list_type == 'demands' %}
+                <p>Be the first to <a href="{{ url_for('buyer.add_demand') }}" class="text-success">Post Demands</a>!</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>
+
+
+</div>

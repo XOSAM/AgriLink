@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light"> <!-- Set a default theme -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ title or "AgriLink Malawi" }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Link to External Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+  <!-- Global Background Slideshow -->
+  <div class="global-background-slideshow">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (1).jpg') }}" alt="Background 1" class="active">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (2).jpg') }}" alt="Background 2">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (3).jpg') }}" alt="Background 3">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (4).jpg') }}" alt="Background 4">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (5).jpg') }}" alt="Background 5">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (6).jpg') }}" alt="Background 6">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (7).jpg') }}" alt="Background 7">
+  </div>
+
+  <!-- Background Overlay -->
+  <div class="background-overlay"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark site-header">
+    <div class="container">
+      <button class="btn btn-link p-0 me-2" onclick="history.back()" title="Go Back">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('main.homepage') }}">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="AgriLink Malawi Logo">
+        AgriLink Malawi
+      </a>
+      <!-- Hamburger Menu Button -->
+      <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <img src="{{ url_for('static', filename='menu.png') }}" alt="Menu" style="width: 30px; height: 30px;">
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="d-flex align-items-center ms-auto flex-column flex-lg-row">
+          <!-- Dark Mode Toggle Button -->
+          <button class="btn btn-outline-light btn-sm me-2 mb-2 mb-lg-0" id="darkModeToggle" title="Toggle Dark Mode">
+            <i class="fas fa-moon"></i>
+          </button>
+          {% if session.logged_in %}
+            {% if session.role == 'buyer' %}
+              <!-- Quick Actions for Buyers -->
+              <a class="btn btn-outline-light btn-sm me-2 mb-2 mb-lg-0" href="{{ url_for('buyer.add_demand') }}">
+                <i class="fas fa-plus-circle"></i> Post Demand
+              </a>
+              <a class="btn btn-outline-light btn-sm me-2 mb-2 mb-lg-0" href="{{ url_for('buyer.view_my_demands') }}">
+                <i class="fas fa-tasks"></i> Manage Demands
+              </a>
+              <a class="btn btn-outline-light btn-sm me-2 mb-2 mb-lg-0" href="{{ url_for('buyer.view_my_orders') }}">
+                <i class="fas fa-history"></i> My Orders
+              </a>
+            {% elif session.role == 'farmer' %}
+              <!-- Quick Actions for Farmers -->
+              <a class="btn btn-outline-light btn-sm me-2 mb-2 mb-lg-0" href="{{ url_for('farmer.add_crop') }}">
+                <i class="fas fa-plus-circle"></i> Register Crops
+              </a>
+              <a class="btn btn-outline-light btn-sm me-2 mb-2 mb-lg-0" href="{{ url_for('farmer.dashboard') }}">
+                <i class="fas fa-bullhorn"></i> View Demands
+              </a>
+              <a class="btn btn-outline-light btn-sm me-2 mb-2 mb-lg-0" href="{{ url_for('farmer.view_my_listings') }}">
+                <i class="fas fa-list-alt"></i> My Listings
+              </a>
+              <a class="btn btn-outline-light btn-sm me-2 mb-2 mb-lg-0" href="{{ url_for('farmer.my_sales') }}">
+                <i class="fas fa-box-open"></i> My Sales
+              </a>
+            {% endif %}
+            {% if session.role != 'admin' %}
+            <!-- Messages Link -->
+            <a class="nav-link me-3 mb-2 mb-lg-0" href="{{ url_for('messaging.view_messages') }}">
+              <i class="fas fa-envelope"></i><span class="d-none d-lg-inline"> Messages</span>
+            </a>
+            {% endif %}
+            <!-- Display Profile Picture and Link -->
+            <a class="nav-link d-flex align-items-center p-0 mb-2 mb-lg-0" href="{{ url_for('main.profile') }}">
+              <!-- Use session.profile_pic for image source -->
+              <img src="{{ url_for('static', filename='uploads/' + (session.profile_pic if session.profile_pic else 'default.jpg')) }}"
+                   class="nav-profile-pic" alt="Profile">
+              <span class="d-none d-sm-inline ms-1">{{ session.role | default('Guest') | title }}</span>
+            </a>
+            <a class="btn btn-warning btn-sm ms-3 mb-2 mb-lg-0" href="{{ url_for('auth.logout') }}">Logout</a>
+          {% else %}
+            <a class="btn btn-outline-light btn-sm me-2 mb-2 mb-lg-0" href="{{ url_for('auth.auth') }}">Login</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Messages -->
+  <div class="flash-message-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+{% block footer %}
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container footer-top-section">
+    <div class="footer-about">
+      <h5 class="footer-title">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="AgriLink Logo" class="footer-logo">
+        AgriLink Malawi
+      </h5>
+      <p>Connecting Malawi's agriculture by empowering farmers and linking quality produce directly to buyers.</p>
+    </div>
+    <div class="footer-links">
+      <h5 class="footer-title">Quick Links</h5>
+      <ul>
+        <li><a href="{{ url_for('about_us') }}#features">Features</a></li>
+        <li><a href="{{ url_for('about_us') }}#about">About Us</a></li>
+        <li><a href="{{ url_for('about_us') }}#contact-form">Contact</a></li>
+        <li><a href="{{ url_for('about_us') }}#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-social">
+      <h5 class="footer-title">Follow Us</h5>
+      <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    </div>
+  </div>
+  <div class="footer-bottom-section">
+    <p>&copy; 2025 AgriLink Malawi. All Rights Reserved.</p>
+  </div>
+</footer>
+{% endblock %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- Slideshow ---
+      const images = document.querySelectorAll('.global-background-slideshow img');
+      let currentIndex = 0;
+      function showNextImage() {
+        images[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + 1) % images.length;
+        images[currentIndex].classList.add('active');
+      }
+      if (images.length > 0) {
+        showNextImage();
+        setInterval(showNextImage, 7000);
+      }
+
+      // --- Dark Mode ---
+      const darkModeToggle = document.getElementById('darkModeToggle');
+      const htmlElement = document.documentElement;
+      const icon = darkModeToggle.querySelector('i');
+
+      const setTheme = (theme) => {
+        htmlElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+      };
+
+      let currentTheme = localStorage.getItem('theme');
+      if (!currentTheme) {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        currentTheme = prefersDark ? 'dark' : 'light';
+      }
+
+      darkModeToggle.addEventListener('click', function() {
+        const activeTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = activeTheme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+      });
+
+      // Set initial theme on load
+      setTheme(currentTheme);
+    });
+  </script>
+</body>
+</html>

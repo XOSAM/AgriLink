@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">All Platform Messages</h1>
+
+    {% if messages %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Sent At</th>
+                    <th>From</th>
+                    <th>Contact Info</th>
+                    <th>To</th>
+                    <th>Subject</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in messages %}
+                <tr>
+                    <td class="text-nowrap">{{ message.sent_at.split('.')[0] }}</td>
+                    <td>{{ message.sender_name or 'N/A' }}</td>
+                    <td>{{ message.sender_contact or 'N/A' }}</td>
+                    <td>{{ message.receiver_name or 'Support' }}</td>
+                    <td>{{ message.subject or 'General' }}</td>
+                    <td>{{ message.message }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">There are no messages on the platform yet.</div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">&larr; Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

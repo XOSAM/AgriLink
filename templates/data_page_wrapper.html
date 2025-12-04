@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-wrapper">
+    {% include 'data_view.html' %}
+</div>
+
+<div class="text-center mb-4">
+    {% if session.role == 'farmer' %}
+        <a href="{{ url_for('farmer.dashboard') }}" class="btn btn-secondary">&larr; Back to Dashboard</a>
+    {% elif session.role == 'buyer' %}
+        <a href="{{ url_for('buyer.dashboard') }}" class="btn btn-secondary">&larr; Back to Dashboard</a>
+    {% endif %}
+</div>
+{% endblock %}

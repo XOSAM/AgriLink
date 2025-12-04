@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-4">
+  <!-- Welcome Header -->
+  <div class="dashboard-header">
+    <h1 class="display-6">Farmer Dashboard</h1>
+    <p class="lead">Welcome, <span class="fw-bold">{{ session.name }}</span>! Find buyers for your crops.</p>
+  </div>
+
+  <!-- Section 1: Buyer Demands -->
+  <section class="mb-5">
+    <h2 class="section-title">📢 Buyer Demands</h2>
+
+    <!-- Search and Filter Form for Demands -->
+    <form method="GET" action="{{ url_for('farmer.dashboard') }}" class="mb-4 p-3 bg-light rounded border">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-5">
+          <label for="search_query" class="form-label">Search by Crop Name</label>
+          <input type="text" name="search_query" id="search_query" class="form-control" placeholder="e.g., Maize, Tea" value="{{ search_query or '' }}">
+        </div>
+        <div class="col-md-5">
+          <label for="location" class="form-label">Filter by Location</label>
+          <select name="location" id="location" class="form-select">
+            <option value="">All Locations</option>
+            <option value="Balaka" {% if location == 'Balaka' %}selected{% endif %}>Balaka</option>
+            <option value="Blantyre" {% if location == 'Blantyre' %}selected{% endif %}>Blantyre</option>
+            <option value="Chikwawa" {% if location == 'Chikwawa' %}selected{% endif %}>Chikwawa</option>
+            <option value="Chiradzulu" {% if location == 'Chiradzulu' %}selected{% endif %}>Chiradzulu</option>
+            <option value="Chitipa" {% if location == 'Chitipa' %}selected{% endif %}>Chitipa</option>
+            <option value="Dedza" {% if location == 'Dedza' %}selected{% endif %}>Dedza</option>
+            <option value="Dowa" {% if location == 'Dowa' %}selected{% endif %}>Dowa</option>
+            <option value="Karonga" {% if location == 'Karonga' %}selected{% endif %}>Karonga</option>
+            <option value="Kasungu" {% if location == 'Kasungu' %}selected{% endif %}>Kasungu</option>
+            <option value="Likoma" {% if location == 'Likoma' %}selected{% endif %}>Likoma</option>
+            <option value="Lilongwe" {% if location == 'Lilongwe' %}selected{% endif %}>Lilongwe</option>
+            <option value="Machinga" {% if location == 'Machinga' %}selected{% endif %}>Machinga</option>
+            <option value="Mangochi" {% if location == 'Mangochi' %}selected{% endif %}>Mangochi</option>
+            <option value="Mchinji" {% if location == 'Mchinji' %}selected{% endif %}>Mchinji</option>
+            <option value="Mulanje" {% if location == 'Mulanje' %}selected{% endif %}>Mulanje</option>
+            <option value="Mwanza" {% if location == 'Mwanza' %}selected{% endif %}>Mwanza</option>
+            <option value="Mzimba" {% if location == 'Mzimba' %}selected{% endif %}>Mzimba</option>
+            <option value="Neno" {% if location == 'Neno' %}selected{% endif %}>Neno</option>
+            <option value="Nkhotakota" {% if location == 'Nkhotakota' %}selected{% endif %}>Nkhotakota</option>
+            <option value="Nsanje" {% if location == 'Nsanje' %}selected{% endif %}>Nsanje</option>
+            <option value="Ntcheu" {% if location == 'Ntcheu' %}selected{% endif %}>Ntcheu</option>
+            <option value="Ntchisi" {% if location == 'Ntchisi' %}selected{% endif %}>Ntchisi</option>
+            <option value="Phalombe" {% if location == 'Phalombe' %}selected{% endif %}>Phalombe</option>
+            <option value="Rumphi" {% if location == 'Rumphi' %}selected{% endif %}>Rumphi</option>
+            <option value="Salima" {% if location == 'Salima' %}selected{% endif %}>Salima</option>
+            <option value="Thyolo" {% if location == 'Thyolo' %}selected{% endif %}>Thyolo</option>
+            <option value="Zomba" {% if location == 'Zomba' %}selected{% endif %}>Zomba</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-success w-100">Search</button>
+        </div>
+      </div>
+    </form>
+
+    {% with items=demands, list_type='demands', is_owner_view=False, title='' %}
+      {% include 'data_view.html' %}
+    {% endwith %}
+
+    <!-- Pagination Controls -->
+    {% if total_pages > 1 %}
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <!-- Previous Page Link -->
+        <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+          <a class="page-link" href="{{ url_for('farmer.dashboard', page=page-1, search_query=search_query, location=location) }}">Previous</a>
+        </li>
+
+        <!-- Page Number Links -->
+        {% for p in range(1, total_pages + 1) %}
+        <li class="page-item {% if p == page %}active{% endif %}">
+          <a class="page-link" href="{{ url_for('farmer.dashboard', page=p, search_query=search_query, location=location) }}">{{ p }}</a>
+        </li>
+        {% endfor %}
+
+        <!-- Next Page Link -->
+        <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+          <a class="page-link" href="{{ url_for('farmer.dashboard', page=page+1, search_query=search_query, location=location) }}">Next</a>
+        </li>
+      </ul>
+    </nav>
+    {% endif %}
+  </section>
+
+  <!-- Section 2: Other Farmers' Crops -->
+  <section>
+    <h2 class="section-title">Other Farmers' Listings</h2>
+    <!-- This section can be built out similarly if needed -->
+  </section>
+</div>
+{% endblock %}

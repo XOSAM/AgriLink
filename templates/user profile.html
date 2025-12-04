@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  /* Local Profile Styles */
+  .profile-box {
+    max-width: 500px;
+    margin: 30px auto; /* Adjusted margin to fit within base.html content area */
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  }
+  .profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 3px solid #046307;
+  }
+  .btn-success {
+    background-color: #046307;
+    border: none;
+  }
+</style>
+
+<div class="profile-box text-center">
+  <h3 class="text-success">My Profile</h3>
+  <img src="{{ url_for('static', filename='uploads/' + (user[5] if user and user[5] else 'default.jpg')) }}" class="profile-pic" alt="Profile Picture">
+
+  <form method="POST" action="{{ url_for('profile') }}" enctype="multipart/form-data" class="text-start mt-4">
+    <div class="mb-3">
+      <label class="form-label">Full Name</label>
+      <input type="text" name="name" value="{{ user[1] if user else '' }}" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" name="email" value="{{ user[2] if user else '' }}" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Change Password</label>
+      <input type="password" name="password" placeholder="Leave blank to keep current" class="form-control">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Upload Profile Picture</label>
+      <input type="file" name="profile_pic" class="form-control">
+      <small class="text-muted">Current file: {{ user[5] if user else 'N/A' }}</small>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100 mt-3">Update Profile</button>
+  </form>
+</div>
+{% endblock %}

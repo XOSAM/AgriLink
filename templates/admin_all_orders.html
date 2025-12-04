@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">All Platform Transactions</h1>
+
+    {% if orders %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Crop</th>
+                    <th>Buyer</th>
+                    <th>Farmer</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td class="text-nowrap">{{ order.order_date.split('.')[0] }}</td>
+                    <td>{{ order.crop_name }}</td>
+                    <td>{{ order.buyer_name }}</td>
+                    <td>{{ order.farmer_name }}</td>
+                    <td>MWK {{ "{:,.2f}".format(order.total_price) }}</td>
+                    <td>
+                        <span class="badge status-{{ order.order_status | lower }}">{{ order.order_status | title }}</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">There are no orders on the platform yet.</div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">&larr; Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

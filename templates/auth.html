@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .auth-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+    }
+    .auth-container {
+        max-width: 450px;
+        width: 100%;
+    }
+</style>
+<div class="auth-wrapper">
+    <div class="auth-container">
+        <h2 class="text-center mb-4 text-success-main fw-bold">Welcome to AgriLink Malawi</h2>
+
+        <!-- Login Form -->
+        <div id="login-form" class="auth-box p-4 shadow-sm rounded">
+            <h4 class="text-center mb-4 text-success-main">Account Login</h4>
+            <form method="POST" action="{{ url_for('auth.auth') }}">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 mt-2">Login</button>
+            </form>
+            <div class="text-center mt-3">
+                <button class="btn btn-link" onclick="showRegister()">Don't have an account? Register</button>
+                <a href="{{ url_for('auth.forgot_password') }}" class="btn btn-link">Forgot Password?</a>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form" class="auth-box p-4 shadow-sm rounded" style="display: none;">
+            <h4 class="text-center mb-4 text-success-main">Create Account</h4>
+            <form id="registration-form" method="POST" action="{{ url_for('auth.auth') }}">
+                <input type="hidden" name="form_name" value="register">
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Account Type</label>
+                    <div class="d-flex justify-content-around">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="role" id="roleFarmer" value="farmer" required {% if not form_data or form_data.role == 'farmer' %}checked{% endif %}>
+                            <label class="form-check-label" for="roleFarmer">Farmer</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="role" id="roleBuyer" value="buyer" required {% if form_data and form_data.role == 'buyer' %}checked{% endif %}>
+                            <label class="form-check-label" for="roleBuyer">Buyer</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Farmer-specific fields -->
+                <div id="farmer-fields" style="display: none;">
+                    <hr>
+                    <h5 class="text-center small text-muted mb-3">Farmer Details</h5>
+                    <div class="form-group mb-3">
+                        <label for="phone_number" class="form-label">Phone Number</label>
+                        <div class="input-group">
+                            <select class="form-select" name="phone_operator" style="max-width: 120px;">
+                                <option value="airtel">Airtel</option>
+                                <option value="tnm">TNM</option>
+                            </select>
+                            <input type="tel" class="form-control" name="phone_number" placeholder="e.g. 881234567">
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="bank_name" class="form-label">Bank Name</label>
+                        <select class="form-select" name="bank_name">
+                            <option value="">-- Select Bank --</option>
+                            <option value="National Bank of Malawi">National Bank of Malawi</option>
+                            <option value="Standard Bank">Standard Bank</option>
+                            <option value="FDH Bank">FDH Bank</option>
+                            <option value="NBS Bank">NBS Bank</option>
+                            <option value="MyBucks Banking Corporation">Centenary Bank</option>
+                            <option value="Ecobank">Ecobank</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="bank_account_number" class="form-label">Bank Account Number</label>
+                        <input type="text" class="form-control" name="bank_account_number">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 mt-2">Register</button>
+            </form>
+            <div class="text-center mt-3">
+                <button class="btn btn-link" onclick="showLogin()">Already have an account? Login</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+function showRegister() {
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('register-form').style.display = 'block';
+}
+
+function showLogin() {
+    document.getElementById('register-form').style.display = 'none';
+    document.getElementById('login-form').style.display = 'block';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const farmerFields = document.getElementById('farmer-fields');
+    const roleRadios = document.querySelectorAll('input[name="role"]');
+
+    function toggleFarmerFields() {
+        const selectedRole = document.querySelector('input[name="role"]:checked');
+        if (selectedRole && selectedRole.value === 'farmer') {
+            farmerFields.style.display = 'block';
+        } else {
+            farmerFields.style.display = 'none';
+        }
+    }
+
+    roleRadios.forEach(radio => {
+        radio.addEventListener('change', toggleFarmerFields);
+    });
+
+    // **Crucial Fix**: Run the check as soon as the page loads.
+    toggleFarmerFields();
+});
+</script>
+{% endblock %}

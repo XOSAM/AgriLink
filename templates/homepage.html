@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+  <!-- Background Slideshow (now contained within hero) -->
+  <div class="background-slideshow">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (1).jpeg') }}" alt="Malawi Farming Landscape 1" class="active">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (2).jpeg') }}" alt="Malawi Farming Landscape 2">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (3).jpeg') }}" alt="Malawi Farming Landscape 3">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (4).jpeg') }}" alt="Malawi Farming Landscape 4">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (5).jpeg') }}" alt="Malawi Farming Landscape 5">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (6).jpg') }}" alt="Malawi Farming Landscape 6">
+    <img src="{{ url_for('static', filename='backgrounds/backgrounds (7).jpg') }}" alt="Malawi Farming Landscape 7">
+  </div>
+  <div class="hero-content">
+    <div class="mb-3">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="AgriLink Malawi Logo" style="height: 70px;">
+    </div>
+    <h1>Connecting Malawi's Agriculture</h1>
+    <p>Empowering farmers and linking quality produce to buyers directly.</p>
+    {% if not session.logged_in %}
+      <a href="{{ url_for('auth.auth') }}" class="btn btn-warning btn-lg mt-3 me-3 fw-bold">Join AgriLink Today</a>
+    {% else %}
+      {% if session.role == 'farmer' %}
+        <a href="{{ url_for('farmer.dashboard') }}" class="btn btn-warning btn-lg mt-3 fw-bold">Go to Farmer Dashboard</a>
+      {% elif session.role == 'buyer' %}
+        <a href="{{ url_for('buyer.dashboard') }}" class="btn btn-warning btn-lg mt-3 fw-bold">Go to Buyer Dashboard</a>
+      {% elif session.role == 'admin' %}
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-warning btn-lg mt-3 fw-bold">Go to Admin Dashboard</a>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features" id="features">
+  <div class="container">
+    <h2 class="text-center text-success mb-4 fw-bold">Our Platform Features</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5>Farmer Listings</h5>
+          <p>Farmers can list their crops to reach reliable buyers directly.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5>Buyer Marketplace</h5>
+          <p>Buyers can view available produce, connect with farmers, and place orders seamlessly.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5>Admin Management</h5>
+          <p>Admins can manage users, transactions, and maintain system transparency.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Listings -->
+<section class="featured-listings py-5 bg-light" id="featured">
+  <div class="container">
+    <h2 class="text-center text-success mb-4 fw-bold">Featured Listings</h2>
+    <div class="row g-4">
+      {% if featured_crops %}
+        {% for crop in featured_crops %}
+          <div class="col-md-4">
+            <!-- Reusing the data-card style from base.html -->
+            <div class="data-card">
+              {% set crop_image_name = crop.crop_name | lower | replace(' ', '_') | replace('(', '') | replace(')', '') + '.jpg' %}
+              {% if crop.image %}
+                  <img src="{{ url_for('static', filename='uploads/' + crop.image) }}" class="card-img-top" alt="{{ crop.crop_name }}">
+              {% else %}
+                  <img src="{{ url_for('static', filename='crop_images/' + crop_image_name) }}" class="card-img-top" alt="{{ crop.crop_name }}" onerror="this.onerror=null;this.src='{{ url_for('static', filename='crop.jpg') }}';">
+              {% endif %}
+              <div class="card-body d-flex flex-column">
+                <h5 class="item-title">{{ crop.crop_name }}</h5>
+                <p class="card-text">
+                  <strong>Price:</strong> MWK {{ "{:,.2f}".format(crop.price) }} / kg<br>
+                  <strong>Location:</strong> {{ crop.location }}
+                </p>
+                <div class="mt-auto">
+                  <a href="{{ url_for('buyer.dashboard') }}" class="btn btn-success w-100">View Marketplace</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12 text-center">
+          <p class="text-muted">No featured listings available at the moment. Check back soon!</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="container">
+    <h2>About AgriLink Malawi</h2>
+    <p>AgriLink Malawi is a digital platform connecting farmers directly with buyers across Malawi. Our goal is
+      to eliminate middlemen, ensure fair pricing, and promote sustainable agriculture through technology.</p>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <h2>Contact Us</h2>
+  <p>Have questions? Reach out to our support team.</p>
+  <p>Email: <strong>princejalasi823@gmail.com</strong></p>
+  <p>Phone: <strong>+265994734779</strong></p>
+</section>
+
+{% endblock %}

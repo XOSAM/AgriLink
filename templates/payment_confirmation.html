@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .confirmation-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 40px;
+        text-align: center;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .icon {
+        font-size: 5rem;
+        margin-bottom: 20px;
+    }
+    .icon-success {
+        color: #28a745;
+    }
+    .icon-failed {
+        color: #dc3545;
+    }
+    .confirmation-container h2 {
+        margin-bottom: 15px;
+    }
+    .confirmation-container p {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+    }
+    .btn-group .btn {
+        margin: 0 10px;
+    }
+</style>
+
+<div class="confirmation-container">
+    {% if status == 'successful' or status == 'success' %}
+        <div class="icon icon-success">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>Payment Successful!</h2>
+        <p>Thank you for your purchase. Your order #{{ order_id }} has been confirmed. You can view its status in your order history.</p>
+        <div class="btn-group">
+            <a href="{{ url_for('buyer.view_my_orders') }}" class="btn btn-success">View My Orders</a>
+            <a href="{{ url_for('buyer.dashboard') }}" class="btn btn-secondary">Continue Shopping</a>
+        </div>
+
+    {% else %}
+        <div class="icon icon-failed">
+            <i class="fas fa-times-circle"></i>
+        </div>
+        <h2>Payment Failed</h2>
+        <p>Unfortunately, we could not process your payment for order #{{ order_id }}. Please try again or use a different payment method.</p>
+        <div class="btn-group">
+            {% if order_id %}
+            <a href="{{ url_for('buyer.view_crop', crop_id=order_id) }}" class="btn btn-danger">Try Again</a>
+            {% endif %}
+            <a href="{{ url_for('buyer.dashboard') }}" class="btn btn-secondary">Back to Marketplace</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

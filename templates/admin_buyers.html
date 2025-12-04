@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Buyers</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for buyer in buyers %}
+            <tr>
+                <td>{{ buyer.id }}</td>
+                <td>{{ buyer.name }}</td>
+                <td>{{ buyer.email }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('admin_delete_user', user_id=buyer.id) }}" onsubmit="return confirm('Are you sure you want to permanently delete this user and all their data? This cannot be undone.');">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">&larr; Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

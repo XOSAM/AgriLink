@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ crop.crop_name }} - AgriLink{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="row g-0">
+                    <div class="col-md-6">
+                        <img src="{{ url_for('static', filename='uploads/' + crop.image if crop.image else 'images/default_crop.jpg') }}" class="img-fluid rounded-start" alt="{{ crop.crop_name }}" style="height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body p-4">
+                            <h2 class="card-title">{{ crop.crop_name }}</h2>
+                            <p class="card-text text-muted">Sold by: <a href="{{ url_for('main.view_user_profile', user_id=crop.farmer_id) }}">{{ crop.farmer_name }}</a></p>
+                            <hr>
+                            <h4 class="card-text">Price: MWK {{ "%.2f"|format(crop.price) }} per kg</h4>
+                            <p class="card-text"><strong>Available Quantity:</strong> {{ crop.quantity }}</p>
+                            <p class="card-text"><strong>Location:</strong> {{ crop.location }}</p>
+                            <p class="card-text"><strong>Quality:</strong> {{ crop.quality }}</p>
+                            <p class="card-text"><strong>Harvest Date:</strong> {{ crop.harvest_date }}</p>
+                            
+                            <hr>
+                            
+                            <h4 class="mt-4">Purchase This Crop</h4>
+                            <form action="{{ url_for('purchase_crop', crop_id=crop.id) }}" method="POST">
+                                <div class="form-group mb-3">
+                                    <label for="quantity">Quantity (in kg)</label>
+                                    <input type="number" class="form-control" id="quantity" name="quantity" step="0.1" required min="0.1">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="deliveryOption">Delivery Option</label>
+                                    <select class="form-control" id="deliveryOption" name="deliveryOption" required>
+                                        <option value="pickup">Self Pickup</option>
+                                        <option value="delivery">Request Delivery (+MWK 5000 est.)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3" id="pickupPointGroup" style="display: block;">
+                                    <label for="pickupPoint">Pickup Point</label>
+                                    <select class="form-control" id="pickupPoint" name="pickupPoint" required>
+                                        <option value="">Select Pickup Point</option>
+                                        <option value="Lilongwe Bus Depot">Lilongwe Bus Depot</option>
+                                        <option value="Blantyre Bus Depot">Blantyre Bus Depot</option>
+                                        <option value="Mzuzu Bus Depot">Mzuzu Bus Depot</option>
+                                        <option value="Zomba Bus Depot">Zomba Bus Depot</option>
+                                        <option value="Kasungu Bus Depot">Kasungu Bus Depot</option>
+                                        <option value="Nkhotakota Bus Depot">Nkhotakota Bus Depot</option>
+                                        <option value="Salima Bus Depot">Salima Bus Depot</option>
+                                        <option value="Dedza Bus Depot">Dedza Bus Depot</option>
+                                        <option value="Ntcheu Bus Depot">Ntcheu Bus Depot</option>
+                                        <option value="Chiradzulu Bus Depot">Chiradzulu Bus Depot</option>
+                                        <option value="Thyolo Bus Depot">Thyolo Bus Depot</option>
+                                        <option value="Mulanje Bus Depot">Mulanje Bus Depot</option>
+                                        <option value="Phalombe Bus Depot">Phalombe Bus Depot</option>
+                                        <option value="Chikwawa Bus Depot">Chikwawa Bus Depot</option>
+                                        <option value="Nsanje Bus Depot">Nsanje Bus Depot</option>
+                                        <option value="Balaka Bus Depot">Balaka Bus Depot</option>
+                                        <option value="Neno Bus Depot">Neno Bus Depot</option>
+                                        <option value="Mwanza Bus Depot">Mwanza Bus Depot</option>
+                                        <option value="Machinga Bus Depot">Machinga Bus Depot</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="network">Payment Network</label>
+                                    <select class="form-control" id="network" name="network" required>
+                                        <option value="airtel">Airtel Money</option>
+                                        <option value="mpamba">TNM Mpamba</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100 btn-lg">Proceed to Payment</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('deliveryOption').addEventListener('change', function() {
+    var pickupPointGroup = document.getElementById('pickupPointGroup');
+    var pickupPointSelect = document.getElementById('pickupPoint');
+    if (this.value === 'delivery') {
+        pickupPointGroup.style.display = 'block';
+        pickupPointSelect.required = true;
+    } else {
+        pickupPointGroup.style.display = 'none';
+        pickupPointSelect.required = false;
+    }
+});
+</script>
+{% endblock %}

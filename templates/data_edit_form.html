@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="form-box">
+    
+    <!-- Title based on form type -->
+    {% if form_type == 'crop' %}
+        <h3 class="text-center">📝 Edit Crop Listing: {{ data.crop_name }}</h3>
+        <form method="POST" action="{{ url_for('edit_crop', crop_id=data.id) }}" enctype="multipart/form-data">
+    {% elif form_type == 'demand' %}
+        <h3 class="text-center">🛒 Edit Buyer Demand: {{ data.crop_name }}</h3>
+        <form method="POST" action="{{ url_for('buyer.edit_demand', demand_id=data.id) }}" enctype="multipart/form-data">
+    {% endif %}
+
+    <!-- Crop Name (Common) -->
+    <div class="mb-3">
+        <label class="form-label">Crop Name</label>
+        <select name="crop_name" class="form-control" required>
+            <option value="">Select a Crop</option>
+            <option value="Maize" {% if data.crop_name == 'Maize' %}selected{% endif %}>Maize</option>
+            <option value="Tobacco" {% if data.crop_name == 'Tobacco' %}selected{% endif %}>Tobacco</option>
+            <option value="Tea" {% if data.crop_name == 'Tea' %}selected{% endif %}>Tea</option>
+            <option value="Sugar (Sugarcane)" {% if data.crop_name == 'Sugar (Sugarcane)' %}selected{% endif %}>Sugar (Sugarcane)</option>
+            <option value="Cotton" {% if data.crop_name == 'Cotton' %}selected{% endif %}>Cotton</option>
+            <option value="Groundnuts (Peanuts)" {% if data.crop_name == 'Groundnuts (Peanuts)' %}selected{% endif %}>Groundnuts (Peanuts)</option>
+            <option value="Cassava" {% if data.crop_name == 'Cassava' %}selected{% endif %}>Cassava</option>
+            <option value="Sweet Potatoes" {% if data.crop_name == 'Sweet Potatoes' %}selected{% endif %}>Sweet Potatoes</option>
+            <option value="Rice" {% if data.crop_name == 'Rice' %}selected{% endif %}>Rice</option>
+            <option value="Sorghum" {% if data.crop_name == 'Sorghum' %}selected{% endif %}>Sorghum</option>
+            <option value="Millet" {% if data.crop_name == 'Millet' %}selected{% endif %}>Millet</option>
+            <option value="Irish Potatoes" {% if data.crop_name == 'Irish Potatoes' %}selected{% endif %}>Irish Potatoes</option>
+            <option value="Beans" {% if data.crop_name == 'Beans' %}selected{% endif %}>Beans</option>
+            <option value="Pigeon Peas" {% if data.crop_name == 'Pigeon Peas' %}selected{% endif %}>Pigeon Peas</option>
+            <option value="Cowpeas" {% if data.crop_name == 'Cowpeas' %}selected{% endif %}>Cowpeas</option>
+            <option value="Soybeans" {% if data.crop_name == 'Soybeans' %}selected{% endif %}>Soybeans</option>
+            <option value="Coffee" {% if data.crop_name == 'Coffee' %}selected{% endif %}>Coffee</option>
+            <option value="Macadamia Nuts" {% if data.crop_name == 'Macadamia Nuts' %}selected{% endif %}>Macadamia Nuts</option>
+            <option value="Sunflower" {% if data.crop_name == 'Sunflower' %}selected{% endif %}>Sunflower</option>
+            <option value="Mangoes" {% if data.crop_name == 'Mangoes' %}selected{% endif %}>Mangoes</option>
+            <option value="Pawpaws (Papayas)" {% if data.crop_name == 'Pawpaws (Papayas)' %}selected{% endif %}>Pawpaws (Papayas)</option>
+            <option value="Bananas" {% if data.crop_name == 'Bananas' %}selected{% endif %}>Bananas</option>
+            <option value="Oranges" {% if data.crop_name == 'Oranges' %}selected{% endif %}>Oranges</option>
+            <option value="Pineapples" {% if data.crop_name == 'Pineapples' %}selected{% endif %}>Pineapples</option>
+            <option value="Cabbage" {% if data.crop_name == 'Cabbage' %}selected{% endif %}>Cabbage</option>
+            <option value="Tomatoes" {% if data.crop_name == 'Tomatoes' %}selected{% endif %}>Tomatoes</option>
+            <option value="Onions" {% if data.crop_name == 'Onions' %}selected{% endif %}>Onions</option>
+            <option value="Rape (Leafy Vegetable)" {% if data.crop_name == 'Rape (Leafy Vegetable)' %}selected{% endif %}>Rape (Leafy Vegetable)</option>
+            <option value="Okra" {% if data.crop_name == 'Okra' %}selected{% endif %}>Okra</option>
+            <option value="Pumpkin" {% if data.crop_name == 'Pumpkin' %}selected{% endif %}>Pumpkin</option>
+            <option value="Wheat" {% if data.crop_name == 'Wheat' %}selected{% endif %}>Wheat</option>
+            <option value="Yams" {% if data.crop_name == 'Yams' %}selected{% endif %}>Yams</option>
+            <option value="Tung" {% if data.crop_name == 'Tung' %}selected{% endif %}>Tung</option>
+            <option value="Cashew-nut" {% if data.crop_name == 'Cashew-nut' %}selected{% endif %}>Cashew-nut</option>
+            <option value="Coconut" {% if data.crop_name == 'Coconut' %}selected{% endif %}>Coconut</option>
+            <option value="Guava" {% if data.crop_name == 'Guava' %}selected{% endif %}>Guava</option>
+            <option value="Avocadoes" {% if data.crop_name == 'Avocadoes' %}selected{% endif %}>Avocadoes</option>
+            <option value="Peaches" {% if data.crop_name == 'Peaches' %}selected{% endif %}>Peaches</option>
+            <option value="Pears" {% if data.crop_name == 'Pears' %}selected{% endif %}>Pears</option>
+            <option value="Plums" {% if data.crop_name == 'Plums' %}selected{% endif %}>Plums</option>
+            <option value="Granadilla (Passion Fruit)" {% if data.crop_name == 'Granadilla (Passion Fruit)' %}selected{% endif %}>Granadilla (Passion Fruit)</option>
+        </select>
+    </div>
+
+    <!-- Quantity (Common) -->
+    <div class="mb-3">
+        <label class="form-label">Quantity (e.g., 500 kg / 10 Tonnes)</label>
+        <input type="text" name="quantity" value="{{ data.quantity }}" class="form-control" required>
+    </div>
+
+    <!-- CROP-SPECIFIC FIELDS -->
+    {% if form_type == 'crop' %}
+        <div class="mb-3">
+            <label class="form-label">Price (MWK per Unit)</label>
+            <input type="number" step="0.01" name="price" value="{{ data.price }}" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Quality</label>
+            <select name="quality" class="form-control" required>
+                <option value="">Select Quality</option>
+                <option value="Grade A" {% if data.quality == 'Grade A' %}selected{% endif %}>Grade A</option>
+                <option value="Grade B" {% if data.quality == 'Grade B' %}selected{% endif %}>Grade B</option>
+                <option value="Grade C" {% if data.quality == 'Grade C' %}selected{% endif %}>Grade C</option>
+                <option value="Organic" {% if data.quality == 'Organic' %}selected{% endif %}>Organic</option>
+                <option value="Conventional" {% if data.quality == 'Conventional' %}selected{% endif %}>Conventional</option>
+                <option value="Premium" {% if data.quality == 'Premium' %}selected{% endif %}>Premium</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Expected Harvest Date</label>
+            <input type="date" name="harvest_date" value="{{ data.harvest_date }}" class="form-control" required>
+        </div>
+        
+        <div class="mb-3 border p-3 rounded">
+            <label class="form-label d-block mb-2">Listing Image</label>
+            {% if data.image %}
+                <p class="small text-muted mb-1">Current Image:</p>
+                <img src="{{ url_for('static', filename='uploads/' + data.image) }}" class="current-image" alt="Current Crop Image">
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" name="delete_image" id="delete_image">
+                    <label class="form-check-label" for="delete_image">Delete current image</label>
+                </div>
+            {% endif %}
+            <label class="form-label mt-2">Upload New Image (Optional)</label>
+            <input type="file" name="image" class="form-control">
+        </div>
+
+    <!-- DEMAND-SPECIFIC FIELDS -->
+    {% elif form_type == 'demand' %}
+        <div class="mb-3">
+            <label class="form-label">Location</label>
+            <select name="location" class="form-control" required>
+                <option value="">Select District</option>
+                <option value="Balaka" {% if data.location == 'Balaka' %}selected{% endif %}>Balaka</option>
+                <option value="Blantyre" {% if data.location == 'Blantyre' %}selected{% endif %}>Blantyre</option>
+                <option value="Chikwawa" {% if data.location == 'Chikwawa' %}selected{% endif %}>Chikwawa</option>
+                <option value="Chiradzulu" {% if data.location == 'Chiradzulu' %}selected{% endif %}>Chiradzulu</option>
+                <option value="Chitipa" {% if data.location == 'Chitipa' %}selected{% endif %}>Chitipa</option>
+                <option value="Dedza" {% if data.location == 'Dedza' %}selected{% endif %}>Dedza</option>
+                <option value="Dowa" {% if data.location == 'Dowa' %}selected{% endif %}>Dowa</option>
+                <option value="Karonga" {% if data.location == 'Karonga' %}selected{% endif %}>Karonga</option>
+                <option value="Kasungu" {% if data.location == 'Kasungu' %}selected{% endif %}>Kasungu</option>
+                <option value="Likoma" {% if data.location == 'Likoma' %}selected{% endif %}>Likoma</option>
+                <option value="Lilongwe" {% if data.location == 'Lilongwe' %}selected{% endif %}>Lilongwe</option>
+                <option value="Machinga" {% if data.location == 'Machinga' %}selected{% endif %}>Machinga</option>
+                <option value="Mangochi" {% if data.location == 'Mangochi' %}selected{% endif %}>Mangochi</option>
+                <option value="Mchinji" {% if data.location == 'Mchinji' %}selected{% endif %}>Mchinji</option>
+                <option value="Mulanje" {% if data.location == 'Mulanje' %}selected{% endif %}>Mulanje</option>
+                <option value="Mwanza" {% if data.location == 'Mwanza' %}selected{% endif %}>Mwanza</option>
+                <option value="Mzimba" {% if data.location == 'Mzimba' %}selected{% endif %}>Mzimba</option>
+                <option value="Neno" {% if data.location == 'Neno' %}selected{% endif %}>Neno</option>
+                <option value="Nkhotakota" {% if data.location == 'Nkhotakota' %}selected{% endif %}>Nkhotakota</option>
+                <option value="Nsanje" {% if data.location == 'Nsanje' %}selected{% endif %}>Nsanje</option>
+                <option value="Ntcheu" {% if data.location == 'Ntcheu' %}selected{% endif %}>Ntcheu</option>
+                <option value="Ntchisi" {% if data.location == 'Ntchisi' %}selected{% endif %}>Ntchisi</option>
+                <option value="Phalombe" {% if data.location == 'Phalombe' %}selected{% endif %}>Phalombe</option>
+                <option value="Rumphi" {% if data.location == 'Rumphi' %}selected{% endif %}>Rumphi</option>
+                <option value="Salima" {% if data.location == 'Salima' %}selected{% endif %}>Salima</option>
+                <option value="Thyolo" {% if data.location == 'Thyolo' %}selected{% endif %}>Thyolo</option>
+                <option value="Zomba" {% if data.location == 'Zomba' %}selected{% endif %}>Zomba</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Required Quality (Optional)</label>
+            <select name="quality" class="form-control">
+                <option value="">Select Quality</option>
+                <option value="Grade A" {% if data.quality == 'Grade A' %}selected{% endif %}>Grade A</option>
+                <option value="Grade B" {% if data.quality == 'Grade B' %}selected{% endif %}>Grade B</option>
+                <option value="Grade C" {% if data.quality == 'Grade C' %}selected{% endif %}>Grade C</option>
+                <option value="Organic" {% if data.quality == 'Organic' %}selected{% endif %}>Organic</option>
+                <option value="Conventional" {% if data.quality == 'Conventional' %}selected{% endif %}>Conventional</option>
+                <option value="Premium" {% if data.quality == 'Premium' %}selected{% endif %}>Premium</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Message/Notes (Optional)</label>
+            <textarea name="message" class="form-control" rows="3">{{ data.message or '' }}</textarea>
+        </div>
+
+        <div class="mb-3 border p-3 rounded">
+            <label class="form-label d-block mb-2">Demand Image</label>
+            {% if data.image %}
+                <p class="small text-muted mb-1">Current Image:</p>
+                <img src="{{ url_for('static', filename='uploads/' + data.image) }}" class="current-image" alt="Current Demand Image">
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" name="delete_image" id="delete_image">
+                    <label class="form-check-label" for="delete_image">Delete current image</label>
+                </div>
+            {% endif %}
+            <label class="form-label mt-2">Upload New Image (Optional)</label>
+            <input type="file" name="image" class="form-control">
+        </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-success w-100 mt-3">Save Changes</button>
+    <a href="{% if form_type == 'crop' %}{{ url_for('view_my_listings') }}{% else %}{{ url_for('view_my_demands') }}{% endif %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

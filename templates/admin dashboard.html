@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .dashboard-section {
+        padding: 30px 0;
+        background-color: var(--bg-color);
+        min-height: 80vh;
+    }
+    .dashboard-section h1 {
+        color: var(--primary-green);
+        font-weight: 700;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .dashboard-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid var(--border-color);
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .dashboard-card h3 {
+        color: var(--primary-green);
+        font-weight: 600;
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+    }
+    .dashboard-card p {
+        color: var(--text-muted-color);
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-green);
+        margin-bottom: 10px;
+    }
+    .stat-label {
+        color: #6c757d;
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+    .btn-success {
+        background-color: #046307;
+        border: none;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+    .btn-success:hover {
+        background-color: #034a05;
+    }
+</style>
+
+<div class="dashboard-section">
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+
+        <div class="row">
+            <!-- Farmers Management -->
+            <div class="col-md-4">
+                <div class="dashboard-card">
+                    <h3>👨‍🌾 Farmers Management</h3>
+                    <p>View and manage all registered farmers in the system. Monitor their activities and crop listings.</p>
+                    <div class="text-center">
+                        <div class="stat-number">{{ farmers_count or 0 }}</div>
+                        <div class="stat-label">Total Farmers</div>
+                    </div>
+                    <a href="{{ url_for('admin_farmers') }}" class="btn btn-success btn-sm mt-2">Open Farmers List</a>
+                </div>
+            </div>
+
+            <!-- Buyers Management -->
+            <div class="col-md-4">
+                <div class="dashboard-card">
+                    <h3>🛒 Buyers Management</h3>
+                    <p>View and manage all registered buyers. Track their demands and purchasing activities.</p>
+                    <div class="text-center">
+                        <div class="stat-number">{{ buyers_count or 0 }}</div>
+                        <div class="stat-label">Total Buyers</div>
+                    </div>
+                    <a href="{{ url_for('admin_buyers') }}" class="btn btn-success btn-sm mt-2">Open Buyers List</a>
+                </div>
+            </div>
+
+            <!-- Reports & Analytics -->
+            <div class="col-md-4">
+                <div class="dashboard-card">
+                    <h3>📊 Reports & Analytics</h3>
+                    <p>View system statistics, transaction reports, and platform analytics for insights.</p>
+                    <div class="text-center">
+                        <div class="stat-number">{{ total_transactions or 0 }}</div>
+                        <div class="stat-label">Total Transactions</div>
+                    </div>
+                    <a href="{{ url_for('admin_all_orders') }}" class="btn btn-success btn-sm mt-2">View All Transactions</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Admin Actions -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="dashboard-card">
+                    <h3>⚙️ System Settings</h3>
+                    <p>Configure system-wide settings, such as delivery fees and site announcements.</p>
+                    <a href="{{ url_for('admin_settings') }}" class="btn btn-success btn-sm mt-2">Go to Settings</a>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="dashboard-card">
+                    <h3>📧 Messages & Support</h3>
+                    <p>Monitor all user communications on the platform to ensure quality and provide support.</p>
+                    <a href="{{ url_for('admin_messages') }}" class="btn btn-success btn-sm mt-2">View All Messages</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

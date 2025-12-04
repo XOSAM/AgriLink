@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">System Settings</h1>
+
+    <div class="alert alert-info text-center">
+        <h4 class="alert-heading">Coming Soon!</h4>
+        <p>This section will allow you to configure site-wide settings, such as default delivery fees, featured items on the homepage, and more.</p>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">&larr; Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

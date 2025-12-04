@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="messages-container">
+    <div class="message-header">
+        <h3>Your Messages</h3>
+    </div>
+
+    <div class="no-messages">
+        <p class="lead">You have no messages yet.</p>
+        <p>When a user contacts you, the message will appear here.</p>
+        {% set dashboard_url = session.role + '.dashboard' %}
+        <a href="{{ url_for(dashboard_url) }}" class="btn btn-success">Go to Your Dashboard</a>
+    </div>
+</div>
+{% endblock %}

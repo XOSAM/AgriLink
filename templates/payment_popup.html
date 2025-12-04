@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Payment</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+            text-align: center;
+        }
+        .payment-container {
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- This div is required by PayChangu's script to inject the payment iframe -->
+    <div id="wrapper"></div>
+
+    <div class="payment-container">
+        <h2>Complete Your Purchase</h2>
+        <p>Click the button below to open the payment window.</p>
+        <p><strong>Amount:</strong> MWK {{ payment_data.amount }}</p>
+        <button type="button" onclick="makePayment()">Pay Now</button>
+    </div>
+
+    <!-- jQuery is required by PayChangu's popup.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- PayChangu Popup Script -->
+    <script src="https://in.paychangu.com/js/popup.js"></script>
+    <script>
+        // Data passed from our Flask backend
+        const paymentData = JSON.parse('{{ payment_data | tojson | safe }}'); // This line is crucial
+
+        function makePayment() {
+            PaychanguCheckout({
+                public_key: paymentData.public_key,
+                tx_ref: paymentData.tx_ref,
+                amount: paymentData.amount,
+                currency: paymentData.currency,
+                callback_url: paymentData.callback_url,
+                return_url: paymentData.return_url,
+                customer: paymentData.customer,
+                customization: paymentData.customization
+            });
+        }
+
+        // Optional: Automatically trigger the payment popup when the page loads
+        window.onload = makePayment;
+    </script>
+
+</body>
+</html>
